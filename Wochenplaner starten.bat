@@ -1,5 +1,12 @@
 @echo off
 cd /d "%~dp0"
-start "" pythonw -m http.server 8420
-timeout /t 1 /nobreak >nul
-start "" http://localhost:8420
+
+where pythonw >nul 2>&1
+if errorlevel 1 (
+    echo Python wurde nicht gefunden.
+    echo Bitte Python von https://www.python.org/downloads/ installieren.
+    pause
+    exit /b 1
+)
+
+start "" pythonw "%~dp0server.py"
