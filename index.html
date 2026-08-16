@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Wochenplaner</title>
+<link rel="stylesheet" href="style.css">
+<link rel="manifest" href="manifest.json">
+<link rel="icon" href="icon.svg" type="image/svg+xml">
+<meta name="theme-color" content="#4f46e5">
+</head>
+<body>
+<div class="app">
+
+  <header class="topbar">
+    <div class="topbar-left">
+      <h1>🗓️ Wochenplaner</h1>
+      <div class="week-nav">
+        <button id="prevWeek" class="icon-btn" title="Vorherige Woche">←</button>
+        <span id="weekLabel" class="week-label"></span>
+        <button id="nextWeek" class="icon-btn" title="Nächste Woche">→</button>
+        <button id="todayBtn" class="ghost-btn">Diese Woche</button>
+      </div>
+    </div>
+    <div class="topbar-right">
+      <div class="progress-wrap" title="Erledigte Aufgaben diese Woche">
+        <div class="progress-track"><div id="progressFill" class="progress-fill"></div></div>
+        <span id="progressLabel" class="progress-label">0%</span>
+      </div>
+      <button id="themeToggle" class="icon-btn" title="Hell/Dunkel umschalten">🌙</button>
+    </div>
+  </header>
+
+  <main class="content">
+
+    <section class="goals-card card">
+      <h2>🎯 Wochenziele</h2>
+      <ul id="goalsList" class="goals-list"></ul>
+      <form id="goalForm" class="inline-form">
+        <input id="goalInput" type="text" placeholder="Neues Wochenziel…" maxlength="120" required>
+        <button type="submit" class="add-btn">+</button>
+      </form>
+    </section>
+
+    <section class="days-grid" id="daysGrid"></section>
+
+    <section class="habits-card card">
+      <h2>🔁 Gewohnheiten</h2>
+      <div class="habits-table-wrap">
+        <table id="habitsTable" class="habits-table">
+          <thead>
+            <tr>
+              <th class="habit-name-col">Gewohnheit</th>
+              <th>Mo</th><th>Di</th><th>Mi</th><th>Do</th><th>Fr</th><th>Sa</th><th>So</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody id="habitsBody"></tbody>
+        </table>
+      </div>
+      <form id="habitForm" class="inline-form">
+        <input id="habitInput" type="text" placeholder="Neue Gewohnheit (z.B. Sport, Lesen)…" maxlength="60" required>
+        <button type="submit" class="add-btn">+</button>
+      </form>
+    </section>
+
+    <section class="notes-card card">
+      <h2>📝 Notizen der Woche</h2>
+      <textarea id="notesArea" placeholder="Gedanken, Ideen, Dinge zum Nicht-Vergessen…"></textarea>
+    </section>
+
+  </main>
+
+  <footer class="footer">
+    <span>Alle Daten werden lokal in deinem Browser gespeichert.</span>
+  </footer>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
