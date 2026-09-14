@@ -75,7 +75,10 @@
     return {
       goals: [],
       tasks: { 0: [], 1: [], 2: [], 3: [], 4: [], 5: [], 6: [] },
+      // habitChecks: in der Tabelle angekreuzt = fuer den Tag vorgenommen.
+      // habitDone: im Tages-Fenster per Doppelklick erledigt (gruen).
       habitChecks: {},
+      habitDone: {},
       notes: "",
     };
   }
@@ -89,6 +92,7 @@
         goals: raw.goals || base.goals,
         tasks: { ...base.tasks, ...(raw.tasks || {}) },
         habitChecks: raw.habitChecks || base.habitChecks,
+        habitDone: raw.habitDone || base.habitDone,
         notes: raw.notes || "",
       };
     } catch {
@@ -118,16 +122,30 @@
     renderAll();
   }
 
-  function habitChecksFor(habitId) {
-    const stored = weekData.habitChecks[habitId] || [];
+  function dayFlags(map, habitId) {
+    const stored = map[habitId] || [];
     return Array.from({ length: 7 }, (_, i) => !!stored[i]);
   }
 
-  // Tages-Fenster und Gewohnheiten-Tabelle zeigen dieselben Haken - beide neu zeichnen.
-  function setHabitCheck(habitId, dayIndex, checked) {
-    const checks = habitChecksFor(habitId);
-    checks[dayIndex] = checked;
-    weekData.habitChecks[habitId] = checks;
+  // Tages-Fenster und Gewohnheiten-Tabelle zeigen denselben Stand - beide neu zeichnen.
+  function setHabitPlanned(habitId, dayIndex, planned) {
+    const plan = dayFlags(weekData.habitChecks, habitId);
+    plan[dayIndex] = planned;
+    weekData.habitChecks[habitId] = plan;
+    if (!planned) {
+      const done = dayFlags(weekData.habitDone, habitId);
+      done[dayIndex] = false;
+      weekData.habitDone[habitId] = done;
+    }
+    persist();
+    renderDays();
+    renderHabits();
+  }
+
+  function toggleHabitDone(habitId, dayIndex) {
+    const done = dayFlags(weekData.habitDone, habitId);
+    done[dayIndex] = !done[dayIndex];
+    weekData.habitDone[habitId] = done;
     persist();
     renderDays();
     renderHabits();
@@ -219,15 +237,16 @@
       head.innerHTML = `<span class="day-name">${name}</span><span class="day-date">${date.getDate()}. ${MONTHS[date.getMonth()]}</span>`;
       card.appendChild(head);
 
-      if (habitDefs.length) {
+      const plannedHabits = habitDefs.filter((habit) => dayFlags(weekData.habitChecks, habit.id)[dayIndex]);
+      if (plannedHabits.length) {
         const habitList = document.createElement("ul");
         habitList.className = "day-habits";
-        habitDefs.forEach((habit) => {
-          const done = habitChecksFor(habit.id)[dayIndex];
+        plannedHabits.forEach((habit) => {
+          const done = dayFlags(weekData.habitDone, habit.id)[dayIndex];
           const li = document.createElement("li");
           li.className = "day-habit" + (done ? " done" : "");
           li.title = done ? "Erledigt – Doppelklick zum Zurücksetzen" : "Doppelklick, wenn erledigt";
-          li.addEventListener("dblclick", () => setHabitCheck(habit.id, dayIndex, !done));
+          li.addEventListener("dblclick", () => toggleHabitDone(habit.id, dayIndex));
 
           const mark = document.createElement("span");
           mark.className = "habit-mark";
@@ -322,14 +341,17 @@
       nameCell.textContent = habit.name;
       row.appendChild(nameCell);
 
-      const checks = habitChecksFor(habit.id);
+      const planned = dayFlags(weekData.habitChecks, habit.id);
+      const done = dayFlags(weekData.habitDone, habit.id);
 
       for (let i = 0; i < 7; i++) {
         const cell = document.createElement("td");
+        if (done[i]) cell.className = "habit-cell-done";
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.checked = checks[i];
-        checkbox.addEventListener("change", () => setHabitCheck(habit.id, i, checkbox.checked));
+        checkbox.checked = planned[i];
+        checkbox.title = done[i] ? "Erledigt" : "Für diesen Tag vornehmen";
+        checkbox.addEventListener("change", () => setHabitPlanned(habit.id, i, checkbox.checked));
         cell.appendChild(checkbox);
         row.appendChild(cell);
       }

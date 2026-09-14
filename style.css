@@ -359,6 +359,12 @@ li:hover .delete-btn, .task-item:hover .delete-btn, .habit-row:hover .delete-btn
 .habit-name-col { text-align: left !important; min-width: 140px; }
 .habits-table thead th { color: var(--text-muted); font-weight: 600; }
 .habits-table input[type="checkbox"] { width: 16px; height: 16px; cursor: pointer; }
+.habits-table td.habit-cell-done { background: var(--done-bg); }
+.habits-hint {
+  margin: -6px 0 10px;
+  font-size: 0.8rem;
+  color: var(--text-muted);
+}
 
 /* Notes */
 #notesArea {
