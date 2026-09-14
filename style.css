@@ -8,6 +8,9 @@
   --accent-soft: #eef2ff;
   --danger: #ef4444;
   --success: #16a34a;
+  --done-bg: #dcfce7;
+  --done-border: #86efac;
+  --done-text: #166534;
   --prio-high: #ef4444;
   --prio-medium: #f59e0b;
   --prio-low: #10b981;
@@ -24,6 +27,9 @@
   --border: #2c2f36;
   --accent: #818cf8;
   --accent-soft: #232447;
+  --done-bg: rgba(34, 197, 94, 0.16);
+  --done-border: rgba(34, 197, 94, 0.45);
+  --done-text: #86efac;
   --shadow: 0 1px 2px rgba(0,0,0,0.3), 0 1px 8px rgba(0,0,0,0.25);
   color-scheme: dark;
 }
@@ -294,6 +300,49 @@ li:hover .delete-btn, .task-item:hover .delete-btn, .habit-row:hover .delete-btn
   color: var(--text);
 }
 .day-add-form input:focus { outline: 2px solid var(--accent); outline-offset: 1px; }
+
+/* Habits inside day cards */
+.day-habits {
+  list-style: none;
+  margin: 0 0 8px;
+  padding: 0 0 8px;
+  border-bottom: 1px dashed var(--border);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+.day-habit {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  padding: 4px 6px;
+  border: 1px solid transparent;
+  border-radius: 6px;
+  font-size: 0.82rem;
+  cursor: pointer;
+  user-select: none;
+  transition: background 0.15s ease, border-color 0.15s ease;
+}
+.day-habit:hover { background: var(--accent-soft); }
+.habit-mark {
+  width: 8px;
+  height: 8px;
+  border: 1.5px solid var(--accent);
+  border-radius: 2px;
+  flex: none;
+}
+.day-habit.done,
+.day-habit.done:hover {
+  background: var(--done-bg);
+  border-color: var(--done-border);
+  color: var(--done-text);
+  font-weight: 600;
+}
+.day-habit.done .habit-mark {
+  background: var(--success);
+  border-color: var(--success);
+}
+.habit-text { flex: 1; word-break: break-word; }
 
 /* Habits */
 .habits-table-wrap { overflow-x: auto; margin-bottom: 10px; }

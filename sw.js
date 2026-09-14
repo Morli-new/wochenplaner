@@ -1,4 +1,4 @@
-const CACHE_NAME = "wochenplaner-v1";
+const CACHE_NAME = "wochenplaner-v5";
 const ASSETS = ["./", "./index.html", "./style.css", "./app.js", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (event) => {
@@ -19,16 +19,16 @@ self.addEventListener("activate", (event) => {
 
 self.addEventListener("fetch", (event) => {
   if (event.request.method !== "GET") return;
+  // Netzwerk zuerst, damit Updates sofort sichtbar sind; ohne laufenden Server greift der Offline-Cache.
   event.respondWith(
-    caches.match(event.request).then((cached) => {
-      const network = fetch(event.request)
-        .then((response) => {
+    fetch(event.request)
+      .then((response) => {
+        if (response.ok) {
           const copy = response.clone();
           caches.open(CACHE_NAME).then((cache) => cache.put(event.request, copy));
-          return response;
-        })
-        .catch(() => cached);
-      return cached || network;
-    })
+        }
+        return response;
+      })
+      .catch(() => caches.match(event.request))
   );
 });
