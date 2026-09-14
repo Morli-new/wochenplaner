@@ -1,4 +1,4 @@
-const CACHE_NAME = "wochenplaner-v1";
+const CACHE_NAME = "wochenplaner-v2";
 const ASSETS = ["./", "./index.html", "./style.css", "./app.js", "./manifest.json", "./icon.svg"];
 
 self.addEventListener("install", (event) => {

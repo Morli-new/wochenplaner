@@ -118,6 +118,21 @@
     renderAll();
   }
 
+  function habitChecksFor(habitId) {
+    const stored = weekData.habitChecks[habitId] || [];
+    return Array.from({ length: 7 }, (_, i) => !!stored[i]);
+  }
+
+  // Tages-Fenster und Gewohnheiten-Tabelle zeigen dieselben Haken - beide neu zeichnen.
+  function setHabitCheck(habitId, dayIndex, checked) {
+    const checks = habitChecksFor(habitId);
+    checks[dayIndex] = checked;
+    weekData.habitChecks[habitId] = checks;
+    persist();
+    renderDays();
+    renderHabits();
+  }
+
   // ---------- DOM refs ----------
 
   const el = {
@@ -204,6 +219,35 @@
       head.innerHTML = `<span class="day-name">${name}</span><span class="day-date">${date.getDate()}. ${MONTHS[date.getMonth()]}</span>`;
       card.appendChild(head);
 
+      if (habitDefs.length) {
+        const habitList = document.createElement("ul");
+        habitList.className = "day-habits";
+        habitDefs.forEach((habit) => {
+          const done = habitChecksFor(habit.id)[dayIndex];
+          const li = document.createElement("li");
+          li.className = "day-habit" + (done ? " done" : "");
+
+          const label = document.createElement("label");
+          const mark = document.createElement("span");
+          mark.className = "habit-mark";
+          mark.title = "Gewohnheit";
+
+          const checkbox = document.createElement("input");
+          checkbox.type = "checkbox";
+          checkbox.checked = done;
+          checkbox.addEventListener("change", () => setHabitCheck(habit.id, dayIndex, checkbox.checked));
+
+          const text = document.createElement("span");
+          text.className = "habit-text";
+          text.textContent = habit.name;
+
+          label.append(mark, checkbox, text);
+          li.appendChild(label);
+          habitList.appendChild(li);
+        });
+        card.appendChild(habitList);
+      }
+
       const list = document.createElement("ul");
       list.className = "task-list";
       (weekData.tasks[dayIndex] || []).forEach((task) => {
@@ -284,19 +328,14 @@
       nameCell.textContent = habit.name;
       row.appendChild(nameCell);
 
-      const checks = weekData.habitChecks[habit.id] || [false, false, false, false, false, false, false];
+      const checks = habitChecksFor(habit.id);
 
       for (let i = 0; i < 7; i++) {
         const cell = document.createElement("td");
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
-        checkbox.checked = !!checks[i];
-        checkbox.addEventListener("change", () => {
-          const arr = weekData.habitChecks[habit.id] || [false, false, false, false, false, false, false];
-          arr[i] = checkbox.checked;
-          weekData.habitChecks[habit.id] = arr;
-          persist();
-        });
+        checkbox.checked = checks[i];
+        checkbox.addEventListener("change", () => setHabitCheck(habit.id, i, checkbox.checked));
         cell.appendChild(checkbox);
         row.appendChild(cell);
       }
@@ -310,6 +349,7 @@
         habitDefs = habitDefs.filter((h) => h.id !== habit.id);
         saveHabitDefs(habitDefs);
         renderHabits();
+        renderDays();
       });
       delCell.appendChild(del);
       row.appendChild(delCell);
@@ -377,6 +417,7 @@
     saveHabitDefs(habitDefs);
     el.habitInput.value = "";
     renderHabits();
+    renderDays();
   });
 
   el.notesArea.addEventListener("input", () => {
