@@ -226,23 +226,17 @@
           const done = habitChecksFor(habit.id)[dayIndex];
           const li = document.createElement("li");
           li.className = "day-habit" + (done ? " done" : "");
+          li.title = done ? "Erledigt – Doppelklick zum Zurücksetzen" : "Doppelklick, wenn erledigt";
+          li.addEventListener("dblclick", () => setHabitCheck(habit.id, dayIndex, !done));
 
-          const label = document.createElement("label");
           const mark = document.createElement("span");
           mark.className = "habit-mark";
-          mark.title = "Gewohnheit";
-
-          const checkbox = document.createElement("input");
-          checkbox.type = "checkbox";
-          checkbox.checked = done;
-          checkbox.addEventListener("change", () => setHabitCheck(habit.id, dayIndex, checkbox.checked));
 
           const text = document.createElement("span");
           text.className = "habit-text";
           text.textContent = habit.name;
 
-          label.append(mark, checkbox, text);
-          li.appendChild(label);
+          li.append(mark, text);
           habitList.appendChild(li);
         });
         card.appendChild(habitList);

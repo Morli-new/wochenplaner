@@ -7,7 +7,7 @@ Eine kleine, lokale Web-App zur produktiven Planung deiner Woche — keine Insta
 - **Wochenübersicht (Mo–So)** mit eigener Aufgabenliste pro Tag
 - **Aufgaben** mit Priorität (hoch/mittel/niedrig, per Klick auf den Punkt umschaltbar) und Erledigt-Status
 - **Wochenziele** – die 3–5 wichtigsten Dinge der Woche im Blick behalten
-- **Gewohnheiten-Tracker** – wiederkehrende Habits über die 7 Tage abhaken; sie erscheinen zusätzlich in jedem Tages-Fenster und bleiben in beiden Ansichten synchron
+- **Gewohnheiten-Tracker** – wiederkehrende Habits über die 7 Tage abhaken; sie erscheinen zusätzlich in jedem Tages-Fenster (dort per Doppelklick als erledigt markieren – sie werden grün) und bleiben in beiden Ansichten synchron
 - **Notizen** – freier Platz für Gedanken und Ideen der Woche
 - **Fortschrittsanzeige** – zeigt den Anteil erledigter Aufgaben der aktuellen Woche
 - **Wochennavigation** – vor/zurück blättern, jede Woche wird separat gespeichert
