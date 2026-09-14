@@ -342,15 +342,13 @@
       row.appendChild(nameCell);
 
       const planned = dayFlags(weekData.habitChecks, habit.id);
-      const done = dayFlags(weekData.habitDone, habit.id);
 
       for (let i = 0; i < 7; i++) {
         const cell = document.createElement("td");
-        if (done[i]) cell.className = "habit-cell-done";
         const checkbox = document.createElement("input");
         checkbox.type = "checkbox";
         checkbox.checked = planned[i];
-        checkbox.title = done[i] ? "Erledigt" : "Für diesen Tag vornehmen";
+        checkbox.title = "Für diesen Tag vornehmen";
         checkbox.addEventListener("change", () => setHabitPlanned(habit.id, i, checkbox.checked));
         cell.appendChild(checkbox);
         row.appendChild(cell);
